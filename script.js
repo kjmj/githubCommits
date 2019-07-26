@@ -10,11 +10,11 @@ var githubCommits = new Vue({
   },
 
   created: function () {
-    this.fetchData()
+    this.getCommits()
   },
 
   watch: {
-    currentBranch: 'fetchData'
+    currentBranch: 'getCommits'
   },
 
   filters: {
@@ -28,15 +28,36 @@ var githubCommits = new Vue({
   },
 
   methods: {
-    fetchData: function () {
-      let xhr = new XMLHttpRequest();
+    getCommits: function () {
       let self = this;
       let queryString = "commits?per_page=4&sha=";
-      xhr.open('GET', apiURL + queryString + self.currentBranch);
-      xhr.onload = function () {
-        self.commits = JSON.parse(xhr.responseText);
-      };
-      xhr.send()
+
+      self.makeRequest(apiURL + queryString + self.currentBranch)
+          .then(function (response) {
+            self.commits = JSON.parse(response.responseText);
+          })
+          .catch(function (error) {
+            console.log('Something went wrong', error);
+          });
+    },
+    makeRequest: function (url) {
+      let xhr = new XMLHttpRequest();
+
+      return new Promise(function (resolve, reject) {
+        xhr.onload = function () {
+          resolve(xhr);
+        };
+
+        xhr.onerror = function () {
+          reject({
+            status: xhr.status,
+            statusText: xhr.statusText
+          });
+        };
+
+        xhr.open('GET', url, true);
+        xhr.send();
+      });
     }
   }
 });
