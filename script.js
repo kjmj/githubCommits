@@ -1,16 +1,17 @@
-let apiURL = "https://api.github.com/repos/kjmj/avocados/";
+let apiURL = 'https://api.github.com/repos/kjmj/avocados/';
 var githubCommits = new Vue({
 
   el: '#githubCommits',
 
   data: {
-    branches: ['master'],
+    branches: null,
     currentBranch: 'master',
     commits: null
   },
 
   created: function () {
-    this.getCommits()
+    this.getBranches();
+    this.getCommits();
   },
 
   watch: {
@@ -28,16 +29,28 @@ var githubCommits = new Vue({
   },
 
   methods: {
+    getBranches: function () {
+      let self = this;
+      let queryString = 'branches';
+
+      self.makeRequest(apiURL + queryString)
+          .then(function (response) {
+            self.branches = JSON.parse(response.responseText).map(x => x.name);
+          })
+          .catch(function (error) {
+            console.log('Error fetching branches: ', error);
+          });
+    },
     getCommits: function () {
       let self = this;
-      let queryString = "commits?per_page=4&sha=";
+      let queryString = 'commits?per_page=4&sha=';
 
       self.makeRequest(apiURL + queryString + self.currentBranch)
           .then(function (response) {
             self.commits = JSON.parse(response.responseText);
           })
           .catch(function (error) {
-            console.log('Something went wrong', error);
+            console.log('Error fetching commits: ', error);
           });
     },
     makeRequest: function (url) {
