@@ -17,14 +17,10 @@
 
 <div id="githubCommits">
   <h1>Latest Commits</h1>
-  <template v-for="branch in branches">
-    <input type="radio"
-           :id="branch"
-           :value="branch"
-           name="branch"
-           v-model="currentBranch">
-    <label :for="branch">{{ branch }}</label>
-  </template>
+  <v-select :options="branches"
+            v-model="currentBranch">
+  </v-select>
+
   <p>Current Branch: {{ currentBranch }}</p>
   <ul>
     <li v-for="record in commits">

@@ -1,10 +1,12 @@
 let apiURL = 'https://api.github.com/repos/kjmj/avocados/';
+Vue.component('v-select', VueSelect.VueSelect);
+
 var githubCommits = new Vue({
 
   el: '#githubCommits',
 
   data: {
-    branches: null,
+    branches: ['master'],
     currentBranch: 'master',
     commits: null
   },
