@@ -1,4 +1,4 @@
-let apiURL = 'https://api.github.com/repos/kjmj/avocados/';
+let apiURL = 'https://api.github.com/repos/kjmj/avocados';
 Vue.component('v-select', VueSelect.VueSelect);
 
 var githubCommits = new Vue({
@@ -33,7 +33,7 @@ var githubCommits = new Vue({
   methods: {
     getBranches: function () {
       let self = this;
-      let queryString = 'branches';
+      let queryString = '/branches';
 
       self.makeRequest(apiURL + queryString)
           .then(function (response) {
@@ -45,7 +45,7 @@ var githubCommits = new Vue({
     },
     getCommits: function () {
       let self = this;
-      let queryString = 'commits?per_page=4&sha=';
+      let queryString = '/commits?per_page=4&sha=';
 
       self.makeRequest(apiURL + queryString + self.currentBranch)
           .then(function (response) {
