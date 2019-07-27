@@ -6,12 +6,13 @@ var githubCommits = new Vue({
   el: '#githubCommits',
 
   data: {
-    branches: ['master'],
-    currentBranch: 'master',
-    commits: null
+    branches: [''],
+    currentBranch: '',
+    commits: ''
   },
 
   created: function () {
+    this.getDefaultBranch();
     this.getBranches();
     this.getCommits();
   },
@@ -31,6 +32,17 @@ var githubCommits = new Vue({
   },
 
   methods: {
+    getDefaultBranch: function() {
+      let self = this;
+
+      self.makeRequest(apiURL)
+          .then(function (response) {
+            self.currentBranch = JSON.parse(response.responseText).default_branch;
+          })
+          .catch(function (error) {
+            console.log('Error fetching default branch: ', error);
+          });
+    },
     getBranches: function () {
       let self = this;
       let queryString = '/branches';
