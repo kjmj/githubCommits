@@ -17,9 +17,7 @@
 
 <div id="githubCommits">
   <h1>Latest Commits</h1>
-  <h2>This small app was built to learn vue.js. It shows the most recent commits on a sample github repo.</h2>
-  <input v-model="repoURL" v-on:input="parseURL(); tryRepoQuery();" placeholder="Github Repo URL">
-
+  <h2>This small app was built to learn vue.js. It shows the most recent commits on <a href="https://github.com/kjmj/tic-tac-toe" target="_blank">this</a> github repo.</h2>
   <h3> {{ userMessage }}</h3>
   <v-select :options="branches"
             v-model="currentBranch">

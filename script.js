@@ -3,15 +3,17 @@ Vue.component('v-select', VueSelect.VueSelect);
 var githubCommits = new Vue({
   el: '#githubCommits',
   data: {
+    apiURL: 'https://api.github.com/repos/kjmj/tic-tac-toe',
     branches: [''],
     currentBranch: '',
     commits: '',
-    userMessage: '',
-    repoURL: '',
-    apiURL: ''
+    userMessage: ''
   },
   watch: {
     currentBranch: 'getCommits'
+  },
+  created: function() {
+    this.queryRepo()
   },
   filters: {
     truncate: function (v) {
@@ -23,33 +25,22 @@ var githubCommits = new Vue({
     }
   },
   methods: {
-    // try to query the given github repo string
-    tryRepoQuery: function() {
-      let self = this
-      self.queryRepo()
-    },
-    // try to parse repo info from given string into an api call
-    parseURL: function() {
-      let self = this
-      self.apiURL = self.repoURL.replace('github.com', 'api.github.com/repos')
-      console.log(self.apiURL)
-    },
     // query github api, check response codes and act accordingly
     queryRepo: function() {
       let self = this;
 
       self.makeRequest(self.apiURL)
-      .then(function (response) {
-        // github api limit was hit
-        if(response.status === 403) {
-          self.userMessage = 'You have likely hit your github api call limit. Please see https://developer.github.com/v3/#rate-limiting for more info'
-          return
-        }
-        // invalid url
-        if(response.status === 404) {
-          self.userMessage = 'Could not find that repo. Please make sure it exists'
-          return
-        }
+        .then(function (response) {
+          // github api limit was hit
+          if(response.status === 403) {
+            self.userMessage = 'You have likely hit your github api call limit. Please see https://developer.github.com/v3/#rate-limiting for more info'
+            return
+          }
+          // invalid url
+          if(response.status === 404) {
+            self.userMessage = 'Could not find that repo. Please make sure it exists'
+            return
+          }
 
         // valid request, so get repo info
         self.getDefaultBranch();
